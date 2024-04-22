@@ -7,5 +7,6 @@ enum class Routes(val route:String) {
     PhoneNumber("phone-number"),
     CountryCode("country-code"),
     Confirmation("confirmation-screen"),
+    Activation("activation"),
     Chat("chat"),
 }

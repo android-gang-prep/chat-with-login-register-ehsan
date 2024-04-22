@@ -120,7 +120,7 @@ fun SignInScreen(navController: NavController,viewModel:LoginViewModel = android
             },modifier= Modifier
                 .fillMaxWidth()
                 .height(55.dp),colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF3F51B5)
+                containerColor = Color(0xFF002DE3)
             )) {
                 Text(text = "Login",style = buttonTextStyle)
             }

@@ -48,6 +48,9 @@ fun SplashScreen(navController: NavController) {
         val exoPlayer = remember {
             ExoPlayer.Builder(context)
                 .build()
+                .apply {
+                    repeatMode = ExoPlayer.REPEAT_MODE_ALL
+                }
         }
         LaunchedEffect(Unit) {
             val cacheFile = File(context.cacheDir,"file.mp4")
@@ -76,7 +79,7 @@ fun SplashScreen(navController: NavController) {
             },modifier= Modifier
                 .fillMaxWidth()
                 .height(55.dp), colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF3F51B5)
+                containerColor = Color(0xFF002DE3)
             )) {
                 Text(text = "SignUp",style = buttonTextStyle)
             }

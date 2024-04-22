@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -73,8 +74,8 @@ fun SignUpScreen(navController: NavController) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 16.dp)
-                .padding(bottom = 32.dp),
+                .padding(16.dp)
+                .imePadding(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
@@ -100,10 +101,36 @@ fun SignUpScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(32.dp))
             Button(onClick = {
                 if (email.value.isNotEmpty() && name.value.isNotEmpty() && password.value.isNotEmpty()){
-                    AppData.data["email"] = email.value
-                    AppData.data["name"] = name.value
-                    AppData.data["password"] = password.value
-                    navController.navigate(Routes.PhoneNumber.route)
+                    if (email.value.validEmail()){
+                        if (password.value.length >= 6 ){
+                            if(password.value.containsOneOf("!","?","*",",")){
+                                if (password.value.any { it in 'A'..'Z' || it in 'a'..'z' }){
+                                    AppData.data["email"] = email.value
+                                    AppData.data["name"] = name.value
+                                    AppData.data["password"] = password.value
+                                    navController.navigate(Routes.PhoneNumber.route)
+                                }else{
+                                    scope.launch(Dispatchers.Main){
+                                        Toast.makeText(context, "Password should be contains at least one alphabet", Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+
+                            }else{
+                                scope.launch(Dispatchers.Main){
+                                    Toast.makeText(context, "Password should be contains one of !,?,*,(,)", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        }else{
+                            scope.launch(Dispatchers.Main){
+                                Toast.makeText(context, "Password should be at least 6 chars", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    }else{
+                        scope.launch(Dispatchers.Main){
+                            Toast.makeText(context, "Email is not valid", Toast.LENGTH_SHORT).show()
+
+                        }
+                    }
                 }else{
                     scope.launch(Dispatchers.Main){
                         Toast.makeText(context, "Please fill all inputs", Toast.LENGTH_SHORT).show()
@@ -113,7 +140,7 @@ fun SignUpScreen(navController: NavController) {
             },modifier= Modifier
                 .fillMaxWidth()
                 .height(55.dp),colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF3F51B5)
+                containerColor = Color(0xFF002DE3)
             )) {
                 Text(text = "Continue",style = buttonTextStyle)
             }
@@ -153,5 +180,23 @@ fun AppTextField(
                 Text(text = placeholder, fontSize = 12.sp)
             }, textStyle = TextStyle(fontSize = 12.sp)
         )
+    }
+}
+fun String.containsOneOf(vararg value:String):Boolean{
+    return value.any {
+        contains(it)
+    }
+}
+fun String.validEmail():Boolean{
+    return if (contains("@")){
+        var split = split("@")
+        if (split.count() == 2){
+            split = split[1].split(".")
+            split.count() ==2
+        }else{
+            false
+        }
+    }else{
+        false
     }
 }

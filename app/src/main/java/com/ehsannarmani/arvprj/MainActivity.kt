@@ -17,6 +17,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.ehsannarmani.arvprj.navigation.Routes
+import com.ehsannarmani.arvprj.ui.screens.ActivationScreen
 import com.ehsannarmani.arvprj.ui.screens.ChatScreen
 import com.ehsannarmani.arvprj.ui.screens.ConfirmationScreen
 import com.ehsannarmani.arvprj.ui.screens.CountryCodeScreen
@@ -64,6 +65,9 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(Routes.Chat.route){
                             ChatScreen(navController = navController)
+                        }
+                        composable(Routes.Activation.route){
+                            ActivationScreen(navController = navController)
                         }
                     }
                 }

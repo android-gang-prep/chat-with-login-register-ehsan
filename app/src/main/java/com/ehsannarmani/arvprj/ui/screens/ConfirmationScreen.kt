@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -123,7 +124,11 @@ fun ConfirmationScreen(navController: NavController, signUpViewModel: SignUpView
                                                 .apply()
 
                                             Toast.makeText(context, "Login success", Toast.LENGTH_SHORT).show()
-                                            navController.navigate(Routes.Chat.route)
+                                            navController.navigate(Routes.Activation.route){
+                                                popUpTo(0){
+                                                    inclusive  = true
+                                                }
+                                            }
                                         }
 
                                     }
@@ -140,7 +145,7 @@ fun ConfirmationScreen(navController: NavController, signUpViewModel: SignUpView
                 .fillMaxSize()
                 .padding(it)
                 .padding(horizontal = 64.dp)
-                .padding(bottom = 64.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+                .imePadding(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
                 Text(text = "Enter Code", fontSize = 32.sp, fontWeight = FontWeight.Bold)
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(text = "We have sent you an SMS with the code to +62 13091710",modifier=Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
@@ -194,7 +199,7 @@ fun ConfirmationScreen(navController: NavController, signUpViewModel: SignUpView
                         )
                     }
                 }) {
-                    Text(text = "Resend Code",color = Color(0xFF3F51B5), fontSize = 16.sp)
+                    Text(text = "Resend Code",color = Color(0xFF002DE3), fontSize = 16.sp)
                 }
             }
         }

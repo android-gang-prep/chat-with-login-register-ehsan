@@ -16,24 +16,28 @@ import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 val client = OkHttpClient.Builder()
-    .callTimeout(1, TimeUnit.MINUTES)
-    .readTimeout(1, TimeUnit.MINUTES)
-    .writeTimeout(1, TimeUnit.MINUTES)
-    .connectTimeout(1, TimeUnit.MINUTES)
+    .callTimeout(20, TimeUnit.SECONDS)
+    .readTimeout(20, TimeUnit.SECONDS)
+    .writeTimeout(20, TimeUnit.SECONDS)
+    .connectTimeout(20, TimeUnit.SECONDS)
     .build()
 
 fun getRequest(
     url: String,
+    headers: Map<String, String> = mapOf(),
     onError: (String) -> Unit,
     onResponse: (String) -> Unit,
 ) {
-
+    println("makeing request to $url")
     runCatching {
+        var request = Request.Builder()
+            .url(url)
+            .get()
+        headers.forEach { (key, value) ->
+            request = request.addHeader(key, value)
+        }
         client.newCall(
-            Request.Builder()
-                .url(url)
-                .get()
-                .build()
+            request.build()
         )
             .enqueue(object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
@@ -41,15 +45,15 @@ fun getRequest(
                 }
 
                 override fun onResponse(call: Call, response: Response) {
-                        if (response.isSuccessful) {
-                            onResponse(response.body?.string().toString())
-                        } else {
-                            onError(response.body?.string().toString())
-                        }
+                    if (response.isSuccessful) {
+                        onResponse(response.body?.string().toString())
+                    } else {
+                        onError(response.body?.string().toString())
+                    }
                 }
             })
     }.onFailure {
-            onError(it.message.toString())
+        onError(it.message.toString())
     }
 }
 
@@ -64,7 +68,7 @@ fun postRequest(
         var request =
             Request.Builder()
                 .url(url)
-                .post(RequestBody.create("application/json".toMediaType(),body.toString()))
+                .post(RequestBody.create("application/json".toMediaType(), body.toString()))
 
         headers.forEach { (key, value) ->
             request = request.addHeader(key, value)
@@ -78,14 +82,14 @@ fun postRequest(
 
                 override fun onResponse(call: Call, response: Response) {
                     if (response.isSuccessful) {
-                            onResponse(response.body?.string().toString())
+                        onResponse(response.body?.string().toString())
                     } else {
-                            onError(response.body?.string().toString())
+                        onError(response.body?.string().toString())
                     }
                 }
             })
     }.onFailure {
-            onError(it.message.toString())
+        onError(it.message.toString())
     }
 }
 
@@ -102,7 +106,7 @@ fun putRequest(
         val request =
             Request.Builder()
                 .url(url)
-                .put(RequestBody.create("application/json".toMediaType(),body.toString()))
+                .put(RequestBody.create("application/json".toMediaType(), body.toString()))
 
 
         headers.forEach { (key, value) ->
@@ -116,12 +120,12 @@ fun putRequest(
                 }
 
                 override fun onResponse(call: Call, response: Response) {
-                        if (response.isSuccessful) {
-                            onResponse(response.body?.string().toString())
-                        } else {
-                            onError(response.body?.string().toString())
-                        }
+                    if (response.isSuccessful) {
+                        onResponse(response.body?.string().toString())
+                    } else {
+                        onError(response.body?.string().toString())
                     }
+                }
             })
     }.onFailure {
         onError(it.message.toString())
